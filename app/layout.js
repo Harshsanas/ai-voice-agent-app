@@ -17,7 +17,7 @@ export default function RootLayout({ children }) {
       <body
         className={`${inter.className}`}
       ><StackProvider app={stackServerApp}><StackTheme>
-        <Provider> {children}</Provider>
+        <Provider>{children}</Provider>
       </StackTheme></StackProvider></body>
     </html>
   );
