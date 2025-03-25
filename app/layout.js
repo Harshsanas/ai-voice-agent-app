@@ -4,7 +4,7 @@ import { stackServerApp } from "../stack";
 import Provider from "./provider";
 import "./globals.css";
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({ subsets: ["latin"], display: "swap" });
 
 export const metadata = {
   title: "Create Next App",

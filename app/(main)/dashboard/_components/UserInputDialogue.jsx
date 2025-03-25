@@ -16,13 +16,14 @@ import { Button } from "@/components/ui/button";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { LoaderCircle } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function UserInputDialogue({ children, coachingOption }) {
   const [selectExpert, setSelectExpert] = useState("");
   const [topic, setTopic] = useState("");
   const [loading, setLoading] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
-
+  const router = useRouter();
   const createDiscussionRoom = useMutation(api.DiscussionRoom.CreateNewRoom);
 
   const handleTopicChange = (e) => {
@@ -30,18 +31,41 @@ export default function UserInputDialogue({ children, coachingOption }) {
   };
 
   const handleClickNext = async () => {
-    if (!topic || !selectExpert) return;
+    if (!topic || !selectExpert) {
+      toast.error("Please select a topic and an expert");
+      return;
+    }
 
     try {
       setLoading(true);
       const result = await createDiscussionRoom({
-        topic: topic,
+        topic: topic.trim(),
         coachingOption: coachingOption.name,
         expertName: selectExpert,
       });
+
       console.log(result, "result");
+
+      if (result) {
+        setTopic("");
+        setSelectExpert("");
+        setOpenDialog(false);
+
+        setTimeout(() => {
+          router.push(`/discussion-room/${result}`);
+        }, 100);
+      } else {
+        alert("Failed to create discussion room");
+      }
     } catch (error) {
       console.error("Error creating discussion room:", error);
+
+      // More detailed error handling
+      if (error instanceof Error) {
+        toast.error(`Failed to create room: ${error.message}`);
+      } else {
+        toast.error("An unexpected error occurred");
+      }
     } finally {
       setLoading(false);
       setOpenDialog(false);
