@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { Compass, Menu, X, Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { UserButton } from "@stackframe/stack";
+import { UserButton, useUser } from "@stackframe/stack";
 import { memo, useCallback, useState } from "react";
 import { useTheme } from "./(main)/_components/theme-provider";
 
@@ -19,7 +19,8 @@ const NavLink = memo(({ href, label, onClick }) => (
 
 export default function Navbar() {
   const { theme, toggleTheme } = useTheme();
-
+  const userInfo = useUser();
+  console.log(userInfo, "userInfo ");
   const navLinks = [
     { href: "/", label: "Home" },
     { href: "/dashboard", label: "Dashboard" },

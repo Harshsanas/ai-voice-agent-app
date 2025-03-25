@@ -7,6 +7,8 @@ import Image from "next/image";
 import { ArrowRight, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useUser } from "@stackframe/stack";
+import { useRouter } from "next/navigation";
 
 export default function HeroSection() {
   const [email, setEmail] = useState("");
@@ -15,6 +17,15 @@ export default function HeroSection() {
     e.preventDefault();
     console.log("Email submitted:", email);
     setEmail("");
+  };
+
+  const userInfo = useUser();
+  const navigate = useRouter();
+
+  const handleGetStarted = () => {
+    if (userInfo && userInfo.id) {
+      navigate.push(`/dashboard`);
+    }
   };
 
   return (
@@ -30,22 +41,21 @@ export default function HeroSection() {
               personalized learning paths, and a supportive community.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 mb-8">
-              <form
-                onSubmit={handleSubmit}
-                className="flex-1 flex flex-col sm:flex-row gap-3"
-              >
-                <Input
-                  type="email"
-                  placeholder="Enter your email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="flex-1"
-                  required
-                />
-                <Button type="submit" className="gap-2">
-                  Get Started <ArrowRight className="h-4 w-4" />
+              {userInfo && userInfo.id ? (
+                <Button
+                  type="button"
+                  onClick={handleGetStarted}
+                  className="gap-2 cursor-pointer group"
+                >
+                  Go to Dashboard
+                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </Button>
-              </form>
+              ) : (
+                <Button type="button" className="gap-2 cursor-pointer group">
+                  Get Started
+                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                </Button>
+              )}
             </div>
             <div className="flex flex-col sm:flex-row gap-6">
               <div className="flex items-center gap-2">
