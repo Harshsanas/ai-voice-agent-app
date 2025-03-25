@@ -16,13 +16,12 @@ import { Button } from "@/components/ui/button";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { LoaderCircle } from "lucide-react";
-import { useRef } from "react";
 
 export default function UserInputDialogue({ children, coachingOption }) {
-  const [selectExpert, setSelectExpert] = useState('');
-  const [topic, setTopic] = useState('');
+  const [selectExpert, setSelectExpert] = useState("");
+  const [topic, setTopic] = useState("");
   const [loading, setLoading] = useState(false);
-  const dialogCloseRef = useRef(null);
+  const [openDialog, setOpenDialog] = useState(false);
 
   const createDiscussionRoom = useMutation(api.DiscussionRoom.CreateNewRoom);
 
@@ -41,20 +40,16 @@ export default function UserInputDialogue({ children, coachingOption }) {
         expertName: selectExpert,
       });
       console.log(result, "result");
-
-      // Programmatically close the dialog
-      if (dialogCloseRef.current) {
-        dialogCloseRef.current.click();
-      }
     } catch (error) {
       console.error("Error creating discussion room:", error);
     } finally {
       setLoading(false);
+      setOpenDialog(false);
     }
   };
 
   return (
-    <Dialog>
+    <Dialog open={openDialog} onOpenChange={setOpenDialog}>
       <DialogTrigger>{children}</DialogTrigger>
       <DialogContent>
         <DialogHeader>
@@ -75,10 +70,7 @@ export default function UserInputDialogue({ children, coachingOption }) {
               </h2>
               <div className="grid grid-cols-3 md:grid-cols-5 gap-6 mt-3">
                 {CoachingExpert.map((expert, index) => (
-                  <div
-                    key={index}
-                    onClick={() => setSelectExpert(expert.name)}
-                  >
+                  <div key={index} onClick={() => setSelectExpert(expert.name)}>
                     <Image
                       src={expert.avatar}
                       width={100}
@@ -94,9 +86,7 @@ export default function UserInputDialogue({ children, coachingOption }) {
               </div>
               <div className="mt-5 flex justify-end gap-5">
                 <DialogClose asChild>
-                  <Button variant={"ghost"} ref={dialogCloseRef}>
-                    Cancel
-                  </Button>
+                  <Button variant={"ghost"}>Cancel</Button>
                 </DialogClose>
                 <Button
                   disabled={!topic || !selectExpert}
