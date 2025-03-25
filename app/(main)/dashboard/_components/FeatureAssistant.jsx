@@ -2,10 +2,11 @@
 
 import { BlurFade } from "@/components/magicui/blur-fade";
 import { Button } from "@/components/ui/button";
-import { ExpertList } from "@/services/Options";
+import { CoachingOptions } from "@/services/Options";
 import { useUser } from "@stackframe/stack";
 import Image from "next/image";
 import React from "react";
+import UserInputDialogue from "./UserInputDialogue";
 
 export default function FeatureAssistant() {
   const user = useUser();
@@ -22,20 +23,27 @@ export default function FeatureAssistant() {
       </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-5 xl:grid-cols-5 mt-10 gap-10">
-        {ExpertList.map((option, index) => (
+        {CoachingOptions.map((option, index) => (
           <BlurFade key={option.icon} delay={0.25 + index * 0.05} inView>
             <div
               key={index}
               className="p-3 bg-secondary rounded-3xl justify-center items-center flex flex-col"
             >
-              <Image
-                src={option.icon}
-                width={150}
-                height={150}
-                className="h-[70px] w-[70px] hover:rotate-12 cursor-pointer transition-all"
-                alt={option.name}
-              />
-              <h2 className="mt-3 text-gray-700">{option.name}</h2>
+              <UserInputDialogue coachingOption={option}>
+                <div
+                  key={index}
+                  className="justify-center items-center flex flex-col"
+                >
+                  <Image
+                    src={option.icon}
+                    width={150}
+                    height={150}
+                    className="h-[70px] w-[70px] hover:rotate-12 cursor-pointer transition-all"
+                    alt='icon'
+                  />
+                  <h2 className="mt-3 text-gray-700">{option.name}</h2>
+                </div>
+              </UserInputDialogue>
             </div>
           </BlurFade>
         ))}

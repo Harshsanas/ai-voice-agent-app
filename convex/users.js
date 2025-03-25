@@ -7,20 +7,30 @@ export const CreateUser = mutation({
     email: v.string(),
   },
   handler: async (ctx, args) => {
-    //if user is already exist
-    const userData = await ctx.db.query("users")
-      .filter((q) => q.eq(q.field("email"), args.email))
-      .collect();
-    // Create a new user in the database
-    if (userData?.length == 0) {
-      const data = {
-        name: args.name,
-        email: args.email,
-        credits: 50000,
-      };
-      const result = await ctx.db.insert("users", { ...data });
-      return data;
+    try {
+      // Check if user exists
+      const existingUsers = await ctx.db.query("users")
+        .filter((q) => q.eq(q.field("email"), args.email))
+        .collect();
+
+      // If no user exists, create a new one
+      if (existingUsers.length === 0) {
+        const newUserData = {
+          name: args.name,
+          email: args.email,
+          credits: 50000,
+        };
+
+        const userId = await ctx.db.insert("users", newUserData);
+        const newUser = await ctx.db.get(userId);
+        return newUser;
+      }
+
+      // If user already exists, return the existing user
+      return existingUsers[0];
+    } catch (error) {
+      console.error("Error in CreateUser mutation:", error);
+      throw new Error(`Failed to create/retrieve user: ${error.message}`);
     }
-    return userData[0];
   },
 });

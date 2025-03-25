@@ -12,17 +12,19 @@ export default function AuthProvider({ children }) {
   const CreateUser = useMutation(api.users.CreateUser);
 
   useEffect(() => {
-    console.log(user);
     user && CreateNewUser();
   }, [user]);
 
   const CreateNewUser = async () => {
-    const result = await CreateUser({
-      name: user?.displayName,
-      email: user?.primaryEmail,
-    });
-    console.log(result);
-    setUserData(result);
+    try {
+      const result = await CreateUser({
+        name: user?.displayName,
+        email: user?.primaryEmail,
+      });
+      setUserData(result);
+    } catch (error) {
+      console.error("Mutation error:", error);
+    }
   };
 
   return (
