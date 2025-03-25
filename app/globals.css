@@ -43,6 +43,22 @@
   --radius-xl: calc(var(--radius) + 4px);
 }
 
+:root[data-theme="light"] {
+  --bg-color: white;
+  --text-color: black;
+}
+
+:root[data-theme="dark"] {
+  --bg-color: black;
+  --text-color: white;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: background 0.3s ease-in-out;
+}
+
 :root {
   --radius: 0.625rem;
   --background: oklch(1 0 0);

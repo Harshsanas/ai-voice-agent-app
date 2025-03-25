@@ -3,6 +3,7 @@ import { StackProvider, StackTheme } from "@stackframe/stack";
 import { stackServerApp } from "../stack";
 import Provider from "./provider";
 import "./globals.css";
+import Navbar from "./Navbar";
 
 const inter = Inter({ subsets: ["latin"], display: "swap" });
 
@@ -18,6 +19,7 @@ export default function RootLayout({ children }) {
         <StackProvider app={stackServerApp}>
           <StackTheme>
             <Provider>
+              <Navbar />
               {children}
             </Provider>
           </StackTheme>
